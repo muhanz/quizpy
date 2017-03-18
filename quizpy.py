@@ -35,8 +35,39 @@ def authenticate_quizlet():
     redirect_response = input('Paste the full redirect URL here: ')
     generated_code = re.search("(code=)(.+)", redirect_response).group(2)
 
-    return quizlet.fetch_token(
+    with open('access_token.json', 'w') as outfile:
+        json.dump(quizlet.fetch_token(
             token_url, 
             client_secret=quizlet_credentials["client_secret"],
-            authorization_response=redirect_response)
+            authorization_response=redirect_response), outfile)
+        return "JSON token saved!"
 
+
+
+def create_demo_set():
+    with open("access_token.json") as data_file:    
+        token = json.load(data_file)
+
+    # https://quizlet.com/api/2.0/docs/sets
+    # Adding Sets
+    url = 'https://api.quizlet.com/2.0'
+
+    # getting the Chinese text
+    cn = open('demo-text-cn.txt', 'r')
+    cn_lines = cn.readlines()
+
+    # getting the English text
+    en = open('demo-text-en.txt', 'r')
+    en_lines = en.readlines()
+
+    # #POST /sets - Add a new set
+    headers = {'Authorization': 'Bearer ' + token["access_token"]}
+    payload = {
+        'title':'道德经 - Dao De Jing',
+        'terms': cn_lines,
+        'definitions': en_lines,
+        'lang_terms': 'zh-CN', 
+        'lang_definitions': 'en'
+    }
+    call = requests.post(url+"/sets", headers=headers, json=payload)
+    return call
