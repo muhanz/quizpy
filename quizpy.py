@@ -42,8 +42,6 @@ def authenticate_quizlet():
             authorization_response=redirect_response), outfile)
         return "JSON token saved!"
 
-
-
 def create_demo_set():
     with open("access_token.json") as data_file:    
         token = json.load(data_file)
@@ -68,6 +66,26 @@ def create_demo_set():
         'definitions': en_lines,
         'lang_terms': 'zh-CN', 
         'lang_definitions': 'en'
+    }
+    call = requests.post(url+"/sets", headers=headers, json=payload)
+    return call
+
+def create_set(name, term_list, term_lang, def_list, def_lang):
+    with open("access_token.json") as data_file:    
+        token = json.load(data_file)
+
+    # https://quizlet.com/api/2.0/docs/sets
+    # Adding Sets
+    url = 'https://api.quizlet.com/2.0'
+
+    # #POST /sets - Add a new set
+    headers = {'Authorization': 'Bearer ' + token["access_token"]}
+    payload = {
+        'title': name,
+        'terms': term_list,
+        'definitions': def_list,
+        'lang_terms': term_lang, 
+        'lang_definitions': def_lang
     }
     call = requests.post(url+"/sets", headers=headers, json=payload)
     return call

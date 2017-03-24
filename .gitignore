@@ -1,1 +1,3 @@
 *.json
+*.pyc
+__pycache__/quizpy.cpython-36.pyc
