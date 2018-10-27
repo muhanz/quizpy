@@ -8,6 +8,7 @@ from translation import bing
 source_lines = list(filter(bool, (open("letras/"+input("Please enter the name of the file, with the suffix: "), "r").readlines())))
 scrubbed_lines = [line for line in source_lines if line!="\n"]
 dest_lines = []
+source_lang = input("And the language?: ")
 name = input("Give this set a name: ")
 
 for line in scrubbed_lines:
@@ -17,6 +18,6 @@ for line in scrubbed_lines:
         print ("Failing quietly")
     # print (line)
 
-print (create_set(name, scrubbed_lines, "es", dest_lines, "en").text)
+print (create_set(name, scrubbed_lines, source_lang, dest_lines, "en").text)
 
 
